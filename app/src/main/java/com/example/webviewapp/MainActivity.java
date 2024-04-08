@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public void showInternalWebPage(){
         // TODO: Add your code for showing internal web page here
     }
-    private WebView myWebView;
+    WebView myWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         myWebView = findViewById(R.id.my_webview);
         myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
+        myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.loadUrl("https://his.se");
-
 
 
         /*
