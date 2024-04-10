@@ -1,42 +1,71 @@
 
 # Rapport
 
-**Skriv din rapport här!**
-
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
-
+Appen fick ett nytt namn i res/values/strings.xml
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+    <string name="app_name">CoolSchoolApp</string>
+```
+Appen fick tillgång till internet i AndroidManifest.xml
+```
+    <uses-permission android:name="android.permission.INTERNET"/>
+```
+TextWiew elementet byttes ut till ett Webwiew element i activity_main.xml samt fick ett id; "my_webview".
+```
+<WebView
+        android:id="@+id/my_webview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+```
+Variablen myWebView av typen Webview skapades i MainActivity.java och instansierades i onCreate(). En WebViewClient skapades och kopplades till WebView och möjligheten att köra javascript aktiverades i den.
+```
+WebView myWebView;
+```
+```
+@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        myWebView = findViewById(R.id.my_webview);
+        myWebView.setWebViewClient(new WebViewClient()); // Do not open in Chrome!
+        myWebView.getSettings().setJavaScriptEnabled(true);
+```
+En html sida för den interna webbsidan skapades.
+
+[Html page](/app/src/main/assets/his.html)
+
+Funktionerna showInternalWebPage() och showExternalWebPage() initierades i MainActivity.java.
+```
+    public void showExternalWebPage(){
+        myWebView.loadUrl("https://his.se");
     }
-}
+
+    public void showInternalWebPage(){
+        myWebView.loadUrl("file:///android_asset/his.html");
+    }
+```
+När man klickar på "External/Internal Web Page" i appens dropdownmeny kallas någon av funktionerna beroende på vad man klickat på.
+```
+        if (id == R.id.action_external_web) {
+            showExternalWebPage();
+            Log.d("==>","Will display external web page");
+            return true;
+        }
+```
+[Screenshot av External Web Page](/screenshots/screenhotexternalwebpage.png)
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
-
-![](android.png)
-
-Läs gärna:
-
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+        if (id == R.id.action_internal_web) {
+            showInternalWebPage();
+            Log.d("==>","Will display internal web page");
+            return true;
+        }
+```
+[Screenshot av Internal Web Page](/screenshots/screenshotinternalwebpage.png)
